@@ -1,5 +1,9 @@
 name: MoreLoomLayers
-version: '1.0'
+version: '1.10'
 main: me.bear.moreLoomLayers.MoreLoomLayers
 api-version: '1.20'
 authors: [ "Bearofbusiness" ]
+commands:
+  showbannerlayers:
+    description: Shows the layers of a banner
+    aliases: [sbl]
