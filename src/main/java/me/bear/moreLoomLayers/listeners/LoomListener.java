@@ -1,6 +1,7 @@
 package me.bear.moreLoomLayers.listeners;
 
 import me.bear.moreLoomLayers.MoreLoomLayers;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -212,20 +213,37 @@ public class LoomListener implements Listener {
         }
 
         meta.setPatterns(finalPatterns);
+        addLoreForExtraPatterns(meta);
         // Clear the PDC as we're done
         pdc.remove(patternDataKey);
         banner.setItemMeta(meta);
     }
 
+
+    private void addLoreForExtraPatterns(BannerMeta meta) {
+        List<Pattern> patterns = meta.getPatterns();
+        if (patterns.size() > 6) {
+            // We have more than 6 patterns. Add a lore to show the other patterns.
+            List<Component> lore = new ArrayList<>();
+            for (int i = 6; i < patterns.size(); i++) {
+                Pattern p = patterns.get(i);
+                //selection section symbol
+
+                lore.add(Component.text("§7" + formatPatternName(p.getColor().name()) + " " + getPatternRealName(p.getPattern()) ));
+            }
+            meta.lore(lore);
+        }
+    }
+
     /**
-     * Store patterns as a custom byte array in the banner's PDC for retrieval later.
-     * We have to encode the patterns somehow. A simple encoding:
-     * [int length][For each pattern: byte color, short pattern type ID]
+     * store patterns as a custom byte array in the banner's pdc for retrieval later.
+     * we have to encode the patterns somehow. a simple encoding:
+     * [int length][for each pattern: byte color, short pattern type id]
      * <p>
-     * Since we have limited DataType for PersistentData, we use a byte array.
-     * We'll store patterns as:
-     * - First 4 bytes: int count
-     * - Then for each pattern:
+     * since we have limited datatype for persistentdata, we use a byte array.
+     * we'll store patterns as:
+     * - first 4 bytes: int count
+     * - then for each pattern:
      *   1 byte: dye color ordinal
      *   2 bytes: pattern type ordinal (short)
      */
@@ -271,9 +289,102 @@ public class LoomListener implements Listener {
             short patternOrdinal = (short)(((data[index++] & 0xFF) << 8) | (data[index++] & 0xFF));
 
             DyeColor color = DyeColor.values()[colorOrdinal];
-            PatternType ptype = PatternType.values()[patternOrdinal];
-            patterns.add(new Pattern(color, ptype));
+            PatternType patternType = PatternType.values()[patternOrdinal];
+            patterns.add(new Pattern(color, patternType));
         }
         return patterns;
+    }
+
+
+    private String formatPatternName(String string) {
+        String[] words = string.split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            sb.append(word.substring(0, 1).toUpperCase()).append(word.substring(1).toLowerCase()).append(" ");
+        }
+        return sb.toString().trim();
+    }
+    private static String getPatternRealName(PatternType type) {
+        switch (type) {
+            case BASE:
+                return "Base"; // Bottom Stripe
+            case STRIPE_DOWNRIGHT:
+                return "Bend"; // Down Right Stripe
+            case STRIPE_DOWNLEFT:
+                return "Bend Sinister"; // Down Left Stripe
+            case GRADIENT_UP:
+                return "Base Gradient"; // Gradient upside-down
+            case SQUARE_BOTTOM_LEFT:
+                return "Base Dexter Canton"; // Bottom Left Corner
+            case SQUARE_BOTTOM_RIGHT:
+                return "Base Sinister Canton"; // Bottom Right Corner
+            case BORDER:
+                return "Bordure"; // Border
+            case CURLY_BORDER:
+                return "Bordure Indented"; // Curly Border
+            case TRIANGLES_BOTTOM:
+                return "Base Indented"; // Bottom Triangle Sawtooth
+            case STRIPE_TOP:
+                return "Chief"; // Top Stripe
+            case STRAIGHT_CROSS:
+                return "Cross"; // Square Cross
+            case SQUARE_TOP_LEFT:
+                return "Chief Dexter Canton"; // Top Left Corner
+            case SQUARE_TOP_RIGHT:
+                return "Chief Sinister Canton"; // Top Right Corner
+            case TRIANGLE_BOTTOM:
+                return "Chevron"; // Bottom Triangle
+            case CREEPER:
+                return "Creeper Charge"; // Creeper
+            case BRICKS:
+                return "Field Masoned"; // Brick
+            case FLOWER:
+                return "Flower Charge"; // Flower
+            case STRIPE_MIDDLE:
+                return "Fess"; // Horizontal Middle Stripe
+            case GRADIENT:
+                return "Gradient"; // Gradient
+            case GLOBE:
+                return "Globe"; // Globe
+            case TRIANGLE_TOP:
+                return "Inverted Chevron"; // Top Triangle
+            case STRIPE_LEFT:
+                return "Pale Dexter"; // Left Stripe
+            case STRIPE_RIGHT:
+                return "Pale Sinister"; // Right Stripe
+            case STRIPE_CENTER:
+                return "Pale"; // Vertical Center Stripe
+            case STRIPE_SMALL:
+                return "Paly"; // Vertical Small Stripes
+            case DIAGONAL_LEFT_MIRROR:
+                return "Per Bend Sinister"; // Left of Diagonal
+            case DIAGONAL_RIGHT_MIRROR:
+                return "Per Bend"; // Right of upside-down Diagonal
+            case DIAGONAL_LEFT:
+                return "Per Bend Inverted"; // Left of upside-down Diagonal
+            case DIAGONAL_RIGHT:
+                return "Per Bend Sinister Inverted"; // Right of Diagonal
+            case HALF_VERTICAL:
+                return "Per Pale"; // Left Vertical Half
+            case HALF_VERTICAL_MIRROR:
+                return "Per Pale Inverted"; // Right Vertical Half
+            case HALF_HORIZONTAL:
+                return "Per Fess"; // Top Horizontal Half
+            case HALF_HORIZONTAL_MIRROR:
+                return "Per Fess Inverted"; // Bottom Horizontal Half
+            case CIRCLE_MIDDLE:
+                return "Roundel"; // Middle Circle
+            case RHOMBUS_MIDDLE:
+                return "Lozenge"; // Middle Rhombus
+            case SKULL:
+                return "Skull Charge"; // Skull
+            case CROSS:
+                return "Saltire"; // Diagonal Cross
+            case PIGLIN:
+                return "Snout"; // Piglin
+            case MOJANG:
+                return "Thing"; // Mojang
+        }
+        return "Unknown Contact Developer";
     }
 }
