@@ -1,0 +1,5 @@
+name: MoreLoomLayers
+version: '1.0'
+main: me.bear.moreLoomLayers.MoreLoomLayers
+api-version: '1.20'
+authors: [ "Bearofbusiness" ]
