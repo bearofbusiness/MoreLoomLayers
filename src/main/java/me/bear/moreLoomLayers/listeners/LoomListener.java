@@ -52,9 +52,9 @@ public class LoomListener implements Listener {
         }
         int rawSlot = event.getRawSlot();
 
-        if(rawSlot > 3) {
-            return;
-        }
+//        if(rawSlot > 3) {
+//            return;
+//        }
 
         plugin.getLogger().info("\n\nLoom click event: " + event.getAction());
         plugin.getLogger().info("Raw slot: " + event.getRawSlot());
@@ -107,7 +107,7 @@ public class LoomListener implements Listener {
 
     private static boolean isRemovingBannerFromSlot(InventoryClickEvent event) {
         return switch (event.getAction()) {
-            case PICKUP_ALL, PICKUP_HALF, PICKUP_ONE, PICKUP_SOME, SWAP_WITH_CURSOR, DROP_ALL_SLOT, DROP_ONE_SLOT ->
+            case PICKUP_ALL, PICKUP_HALF, PICKUP_ONE, PICKUP_SOME, SWAP_WITH_CURSOR, DROP_ALL_SLOT, DROP_ONE_SLOT, MOVE_TO_OTHER_INVENTORY ->
                     true;
             default -> false;
         };
