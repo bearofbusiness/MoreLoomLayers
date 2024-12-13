@@ -56,13 +56,13 @@ public class LoomListener implements Listener {
 //            return;
 //        }
 
-        plugin.getLogger().info("\n\nLoom click event: " + event.getAction());
-        plugin.getLogger().info("Raw slot: " + event.getRawSlot());
-        plugin.getLogger().info("Slot type: " + event.getSlotType());
-        plugin.getLogger().info("Slot: " + event.getSlot());
-        plugin.getLogger().info("Current item: " + event.getCurrentItem());
-        plugin.getLogger().info("Cursor item: " + event.getCursor());
-        plugin.getLogger().info("Clicked item: " + event.getClickedInventory()+ "\n\n");
+//        plugin.getLogger().info("\n\nLoom click event: " + event.getAction());
+//        plugin.getLogger().info("Raw slot: " + event.getRawSlot());
+//        plugin.getLogger().info("Slot type: " + event.getSlotType());
+//        plugin.getLogger().info("Slot: " + event.getSlot());
+//        plugin.getLogger().info("Current item: " + event.getCurrentItem());
+//        plugin.getLogger().info("Cursor item: " + event.getCursor());
+//        plugin.getLogger().info("Clicked item: " + event.getClickedInventory()+ "\n\n");
 
         // Output slot in the loom is typically slot 3 for 1.20
         // Check if the click is on the output slot
@@ -84,9 +84,9 @@ public class LoomListener implements Listener {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 // Check if we have an output banner
                 ItemStack out = loomInv.getItem(0);
-                plugin.getLogger().info("Output: " + out);
-                if(out != null)
-                    plugin.getLogger().info("Output type: " + out.getType());
+//                plugin.getLogger().info("Output: " + out);
+//                if(out != null)
+//                    plugin.getLogger().info("Output type: " + out.getType());
                 if (out != null && out.getType().toString().endsWith("BANNER")) {
                     // Attempt to increase patterns if possible
                     handleBannerDuringLoom(out);
