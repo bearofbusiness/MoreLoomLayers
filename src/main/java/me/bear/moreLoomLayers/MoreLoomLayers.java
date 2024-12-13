@@ -2,11 +2,7 @@ package me.bear.moreLoomLayers;
 
 import lombok.Getter;
 import me.bear.moreLoomLayers.listeners.LoomListener;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.meta.BannerMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 

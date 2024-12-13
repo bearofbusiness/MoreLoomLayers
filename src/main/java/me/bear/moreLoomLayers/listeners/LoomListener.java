@@ -8,7 +8,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -222,7 +221,7 @@ public class LoomListener implements Listener {
      * Store patterns as a custom byte array in the banner's PDC for retrieval later.
      * We have to encode the patterns somehow. A simple encoding:
      * [int length][For each pattern: byte color, short pattern type ID]
-     *
+     * <p>
      * Since we have limited DataType for PersistentData, we use a byte array.
      * We'll store patterns as:
      * - First 4 bytes: int count
@@ -253,7 +252,7 @@ public class LoomListener implements Listener {
             short patternOrdinal = (short)p.getPattern().ordinal();
 
             data[index++] = colorOrdinal;
-            data[index++] = (byte)(patternOrdinal >> 8);
+            data[index++] = (byte)(0);
             data[index++] = (byte)patternOrdinal;
         }
 
