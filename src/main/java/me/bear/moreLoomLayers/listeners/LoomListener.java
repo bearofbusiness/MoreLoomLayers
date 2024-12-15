@@ -22,13 +22,50 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.bukkit.block.banner.PatternType.*;
+
+import static org.bukkit.block.banner.PatternType.BASE;
+import static org.bukkit.block.banner.PatternType.STRIPE_DOWNRIGHT;
+import static org.bukkit.block.banner.PatternType.STRIPE_DOWNLEFT;
+import static org.bukkit.block.banner.PatternType.GRADIENT_UP;
+import static org.bukkit.block.banner.PatternType.SQUARE_BOTTOM_LEFT;
+import static org.bukkit.block.banner.PatternType.SQUARE_BOTTOM_RIGHT;
+import static org.bukkit.block.banner.PatternType.BORDER;
+import static org.bukkit.block.banner.PatternType.CURLY_BORDER;
+import static org.bukkit.block.banner.PatternType.TRIANGLES_BOTTOM;
+import static org.bukkit.block.banner.PatternType.STRIPE_TOP;
+import static org.bukkit.block.banner.PatternType.STRAIGHT_CROSS;
+import static org.bukkit.block.banner.PatternType.SQUARE_TOP_LEFT;
+import static org.bukkit.block.banner.PatternType.SQUARE_TOP_RIGHT;
+import static org.bukkit.block.banner.PatternType.TRIANGLE_BOTTOM;
+import static org.bukkit.block.banner.PatternType.CREEPER;
+import static org.bukkit.block.banner.PatternType.BRICKS;
+import static org.bukkit.block.banner.PatternType.FLOWER;
+import static org.bukkit.block.banner.PatternType.STRIPE_MIDDLE;
+import static org.bukkit.block.banner.PatternType.GRADIENT;
+import static org.bukkit.block.banner.PatternType.GLOBE;
+import static org.bukkit.block.banner.PatternType.TRIANGLE_TOP;
+import static org.bukkit.block.banner.PatternType.STRIPE_LEFT;
+import static org.bukkit.block.banner.PatternType.STRIPE_RIGHT;
+import static org.bukkit.block.banner.PatternType.STRIPE_CENTER;
+import static org.bukkit.block.banner.PatternType.DIAGONAL_LEFT;
+import static org.bukkit.block.banner.PatternType.DIAGONAL_RIGHT;
+import static org.bukkit.block.banner.PatternType.HALF_VERTICAL;
+import static org.bukkit.block.banner.PatternType.HALF_HORIZONTAL;
+import static org.bukkit.block.banner.PatternType.SKULL;
+import static org.bukkit.block.banner.PatternType.CROSS;
+import static org.bukkit.block.banner.PatternType.PIGLIN;
+import static org.bukkit.block.banner.PatternType.MOJANG;
 
 public class LoomListener implements Listener {
 
     private final MoreLoomLayers plugin;
     private final NamespacedKey patternDataKey;
-
+    private Map<PatternType, String> patterns = new HashMap<>();
     // Loom inventory slots as per current version:
     // Slot 0: Banner input
     // Slot 1: Dye input
@@ -38,6 +75,39 @@ public class LoomListener implements Listener {
     public LoomListener(MoreLoomLayers plugin, NamespacedKey patternDataKey) {
         this.plugin = plugin;
         this.patternDataKey = patternDataKey;
+
+        patterns.put(BASE, "Base");
+        patterns.put(STRIPE_DOWNRIGHT, "Bend");
+        patterns.put(STRIPE_DOWNLEFT, "Bend Sinister");
+        patterns.put(GRADIENT_UP, "Base Gradient");
+        patterns.put(SQUARE_BOTTOM_LEFT, "Base Dexter Canton");
+        patterns.put(SQUARE_BOTTOM_RIGHT, "Base Sinister Canton");
+        patterns.put(BORDER, "Bordure");
+        patterns.put(CURLY_BORDER, "Bordure Indented");
+        patterns.put(TRIANGLES_BOTTOM, "Base Indented");
+        patterns.put(STRIPE_TOP, "Chief");
+        patterns.put(STRAIGHT_CROSS, "Cross");
+        patterns.put(SQUARE_TOP_LEFT, "Chief Dexter Canton");
+        patterns.put(SQUARE_TOP_RIGHT, "Chief Sinister Canton");
+        patterns.put(TRIANGLE_BOTTOM, "Chevron");
+        patterns.put(CREEPER, "Creeper Charge");
+        patterns.put(BRICKS, "Field Masoned");
+        patterns.put(FLOWER, "Flower Charge");
+        patterns.put(STRIPE_MIDDLE, "Fess");
+        patterns.put(GRADIENT, "Gradient");
+        patterns.put(GLOBE, "Globe");
+        patterns.put(TRIANGLE_TOP, "Inverted Chevron");
+        patterns.put(STRIPE_LEFT, "Pale Dexter");
+        patterns.put(STRIPE_RIGHT, "Pale Sinister");
+        patterns.put(STRIPE_CENTER, "Pale");
+        patterns.put(DIAGONAL_LEFT, "Per Bend Inverted");
+        patterns.put(DIAGONAL_RIGHT, "Per Bend Sinister Inverted");
+        patterns.put(HALF_VERTICAL, "Per Pale");
+        patterns.put(HALF_HORIZONTAL, "Per Fess");
+        patterns.put(SKULL, "Skull Charge");
+        patterns.put(CROSS, "Saltire");
+        patterns.put(PIGLIN, "Snout");
+        patterns.put(MOJANG, "Thing");
     }
 
     @EventHandler
@@ -304,87 +374,10 @@ public class LoomListener implements Listener {
         }
         return sb.toString().trim();
     }
-    private static String getPatternRealName(PatternType type) {
-        switch (type) {
-            case BASE:
-                return "Base"; // Bottom Stripe
-            case STRIPE_DOWNRIGHT:
-                return "Bend"; // Down Right Stripe
-            case STRIPE_DOWNLEFT:
-                return "Bend Sinister"; // Down Left Stripe
-            case GRADIENT_UP:
-                return "Base Gradient"; // Gradient upside-down
-            case SQUARE_BOTTOM_LEFT:
-                return "Base Dexter Canton"; // Bottom Left Corner
-            case SQUARE_BOTTOM_RIGHT:
-                return "Base Sinister Canton"; // Bottom Right Corner
-            case BORDER:
-                return "Bordure"; // Border
-            case CURLY_BORDER:
-                return "Bordure Indented"; // Curly Border
-            case TRIANGLES_BOTTOM:
-                return "Base Indented"; // Bottom Triangle Sawtooth
-            case STRIPE_TOP:
-                return "Chief"; // Top Stripe
-            case STRAIGHT_CROSS:
-                return "Cross"; // Square Cross
-            case SQUARE_TOP_LEFT:
-                return "Chief Dexter Canton"; // Top Left Corner
-            case SQUARE_TOP_RIGHT:
-                return "Chief Sinister Canton"; // Top Right Corner
-            case TRIANGLE_BOTTOM:
-                return "Chevron"; // Bottom Triangle
-            case CREEPER:
-                return "Creeper Charge"; // Creeper
-            case BRICKS:
-                return "Field Masoned"; // Brick
-            case FLOWER:
-                return "Flower Charge"; // Flower
-            case STRIPE_MIDDLE:
-                return "Fess"; // Horizontal Middle Stripe
-            case GRADIENT:
-                return "Gradient"; // Gradient
-            case GLOBE:
-                return "Globe"; // Globe
-            case TRIANGLE_TOP:
-                return "Inverted Chevron"; // Top Triangle
-            case STRIPE_LEFT:
-                return "Pale Dexter"; // Left Stripe
-            case STRIPE_RIGHT:
-                return "Pale Sinister"; // Right Stripe
-            case STRIPE_CENTER:
-                return "Pale"; // Vertical Center Stripe
-            case STRIPE_SMALL:
-                return "Paly"; // Vertical Small Stripes
-            case DIAGONAL_LEFT_MIRROR:
-                return "Per Bend Sinister"; // Left of Diagonal
-            case DIAGONAL_RIGHT_MIRROR:
-                return "Per Bend"; // Right of upside-down Diagonal
-            case DIAGONAL_LEFT:
-                return "Per Bend Inverted"; // Left of upside-down Diagonal
-            case DIAGONAL_RIGHT:
-                return "Per Bend Sinister Inverted"; // Right of Diagonal
-            case HALF_VERTICAL:
-                return "Per Pale"; // Left Vertical Half
-            case HALF_VERTICAL_MIRROR:
-                return "Per Pale Inverted"; // Right Vertical Half
-            case HALF_HORIZONTAL:
-                return "Per Fess"; // Top Horizontal Half
-            case HALF_HORIZONTAL_MIRROR:
-                return "Per Fess Inverted"; // Bottom Horizontal Half
-            case CIRCLE_MIDDLE:
-                return "Roundel"; // Middle Circle
-            case RHOMBUS_MIDDLE:
-                return "Lozenge"; // Middle Rhombus
-            case SKULL:
-                return "Skull Charge"; // Skull
-            case CROSS:
-                return "Saltire"; // Diagonal Cross
-            case PIGLIN:
-                return "Snout"; // Piglin
-            case MOJANG:
-                return "Thing"; // Mojang
+    private String getPatternRealName(PatternType type) {
+        if (type == null) {
+            return "Unknown Contact Developer";
         }
-        return "Unknown Contact Developer";
+        return patterns.getOrDefault(type, "Unknown Contact Developer");
     }
 }
