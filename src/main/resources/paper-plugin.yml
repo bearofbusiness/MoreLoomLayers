@@ -1,5 +1,5 @@
 name: MoreLoomLayers
-version: '1.11'
+version: '1.12'
 main: me.bear.moreLoomLayers.MoreLoomLayers
 api-version: '1.21'
 authors: [ "Bearofbusiness" ]
