@@ -28,38 +28,7 @@ import java.util.Map;
 
 import org.bukkit.block.banner.PatternType.*;
 
-import static org.bukkit.block.banner.PatternType.BASE;
-import static org.bukkit.block.banner.PatternType.STRIPE_DOWNRIGHT;
-import static org.bukkit.block.banner.PatternType.STRIPE_DOWNLEFT;
-import static org.bukkit.block.banner.PatternType.GRADIENT_UP;
-import static org.bukkit.block.banner.PatternType.SQUARE_BOTTOM_LEFT;
-import static org.bukkit.block.banner.PatternType.SQUARE_BOTTOM_RIGHT;
-import static org.bukkit.block.banner.PatternType.BORDER;
-import static org.bukkit.block.banner.PatternType.CURLY_BORDER;
-import static org.bukkit.block.banner.PatternType.TRIANGLES_BOTTOM;
-import static org.bukkit.block.banner.PatternType.STRIPE_TOP;
-import static org.bukkit.block.banner.PatternType.STRAIGHT_CROSS;
-import static org.bukkit.block.banner.PatternType.SQUARE_TOP_LEFT;
-import static org.bukkit.block.banner.PatternType.SQUARE_TOP_RIGHT;
-import static org.bukkit.block.banner.PatternType.TRIANGLE_BOTTOM;
-import static org.bukkit.block.banner.PatternType.CREEPER;
-import static org.bukkit.block.banner.PatternType.BRICKS;
-import static org.bukkit.block.banner.PatternType.FLOWER;
-import static org.bukkit.block.banner.PatternType.STRIPE_MIDDLE;
-import static org.bukkit.block.banner.PatternType.GRADIENT;
-import static org.bukkit.block.banner.PatternType.GLOBE;
-import static org.bukkit.block.banner.PatternType.TRIANGLE_TOP;
-import static org.bukkit.block.banner.PatternType.STRIPE_LEFT;
-import static org.bukkit.block.banner.PatternType.STRIPE_RIGHT;
-import static org.bukkit.block.banner.PatternType.STRIPE_CENTER;
-import static org.bukkit.block.banner.PatternType.DIAGONAL_LEFT;
-import static org.bukkit.block.banner.PatternType.DIAGONAL_RIGHT;
-import static org.bukkit.block.banner.PatternType.HALF_VERTICAL;
-import static org.bukkit.block.banner.PatternType.HALF_HORIZONTAL;
-import static org.bukkit.block.banner.PatternType.SKULL;
-import static org.bukkit.block.banner.PatternType.CROSS;
-import static org.bukkit.block.banner.PatternType.PIGLIN;
-import static org.bukkit.block.banner.PatternType.MOJANG;
+import static org.bukkit.block.banner.PatternType.*;
 
 public class LoomListener implements Listener {
 
@@ -108,6 +77,13 @@ public class LoomListener implements Listener {
         patterns.put(CROSS, "Saltire");
         patterns.put(PIGLIN, "Snout");
         patterns.put(MOJANG, "Thing");
+        patterns.put(TRIANGLES_TOP, "Chief Indented");
+        patterns.put(DIAGONAL_UP_RIGHT, "Per Bend Sinister");
+        patterns.put(DIAGONAL_UP_LEFT, "Per Bend");
+        patterns.put(CIRCLE, "Roundel");
+        patterns.put(RHOMBUS, "Lozenge");
+        patterns.put(HALF_VERTICAL_RIGHT, "Per Pale Inverted");
+        patterns.put(HALF_HORIZONTAL_BOTTOM, "Per Fess Inverted");
     }
 
     @EventHandler
@@ -121,42 +97,15 @@ public class LoomListener implements Listener {
             return;
         }
         int rawSlot = event.getRawSlot();
-
-//        if(rawSlot > 3) {
-//            return;
-//        }
-
-//        plugin.getLogger().info("\n\nLoom click event: " + event.getAction());
-//        plugin.getLogger().info("Raw slot: " + event.getRawSlot());
-//        plugin.getLogger().info("Slot type: " + event.getSlotType());
-//        plugin.getLogger().info("Slot: " + event.getSlot());
-//        plugin.getLogger().info("Current item: " + event.getCurrentItem());
-//        plugin.getLogger().info("Cursor item: " + event.getCursor());
-//        plugin.getLogger().info("Clicked item: " + event.getClickedInventory()+ "\n\n");
-
-        // Output slot in the loom is typically slot 3 for 1.20
-        // Check if the click is on the output slot
         if (rawSlot == 3 && event.getAction() == InventoryAction.PICKUP_ALL) {
-            // The player is attempting to take the final patterned banner out.
             ItemStack output = loomInv.getItem(3);
             if (output == null || output.getType() == Material.AIR) {
                 return;
             }
-
-            // If this banner was manipulated, let's restore its patterns.
             restoreExtraPatternsIfAny(output);
         } else {
-            // Before the player takes the item, we might need to trick the loom.
-            // The loom updates patterns internally when items in slot 0,1,2 change.
-            // There's no direct "pattern add" event, so we must rely on a trick:
-            // Whenever a pattern is generated in slot 3, we quickly ensure that the underlying banner
-            // does not exceed the allowed patterns visually, but we store the full pattern list hidden.
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                // Check if we have an output banner
                 ItemStack out = loomInv.getItem(0);
-//                plugin.getLogger().info("Output: " + out);
-//                if(out != null)
-//                    plugin.getLogger().info("Output type: " + out.getType());
                 if (out != null && out.getType().toString().endsWith("BANNER")) {
                     // Attempt to increase patterns if possible
                     handleBannerDuringLoom(out);
@@ -169,8 +118,6 @@ public class LoomListener implements Listener {
             if (banner == null || banner.getType() == Material.AIR) {
                 return;
             }
-
-            // If this banner was manipulated, let's restore its patterns.
             restoreExtraPatternsIfAny(banner);
         }
     }
@@ -185,8 +132,6 @@ public class LoomListener implements Listener {
 
     @EventHandler
     public void onLoomClose(InventoryCloseEvent event) {
-        // If the loom is closed and player left the manipulated banner inside (which shouldn’t happen normally),
-        // we don’t need to do anything. The final taking of banner is what triggers restoration.
         if (!(event.getView().getTopInventory().getType() == InventoryType.LOOM)) {
             return; // Not a loom
         }
@@ -220,9 +165,6 @@ public class LoomListener implements Listener {
         BannerMeta meta = (BannerMeta) banner.getItemMeta();
         List<Pattern> patterns = new ArrayList<>(meta.getPatterns());
         if (patterns.size() > 5) {
-            // We only show up to 5 patterns, and store the rest secretly.
-
-            // Store all patterns in PDC
             storePatternsInPDC(meta, patterns);
 
             // Show only first 5 patterns to the player/loom
@@ -249,27 +191,8 @@ public class LoomListener implements Listener {
         // The banner currently has up to 5 visible patterns
         List<Pattern> current = meta.getPatterns();
 
-        // Combine stored patterns + current patterns. The current patterns are presumably the first 5 patterns + last added pattern.
-        // The "current" should now have the actual last pattern the loom tried to apply.
-        // Our stored patterns are the full set that we previously had.
-
-        // Strategy: The first 5 patterns in "current" are the same as in stored. The last added pattern is the new one we want to add.
-        // So we:
-        // 1. Take the stored patterns (which represent the original full set).
-        // 2. Replace the first 5 with the current first 5 (just to be safe, though they should match).
-        // 3. Append the current patterns beyond the 5th as new ones.
-
-        // However, if current has more than 5 patterns (which it might if the loom succeeded in adding one more),
-        // we append everything beyond 5th from current.
-
-        // Maximum of 16 patterns total:
         int MAX_PATTERNS = 16;
         List<Pattern> finalPatterns = new ArrayList<>(storedPatterns);
-
-        // Ensure storedPatterns at least 5 patterns if we had previously truncated them:
-        // Actually, we truncated the displayed list to 5 previously, so storedPatterns should have been the full original set (more than 5).
-        // We can trust that storedPatterns is the full original set.
-
         // Now, append any additional patterns that loom might have added:
         if (current.size() > 5) {
             for (int i = 5; i < current.size(); i++) {
@@ -284,16 +207,18 @@ public class LoomListener implements Listener {
 
         meta.setPatterns(finalPatterns);
         addLoreForExtraPatterns(meta);
-        // Clear the PDC as we're done
+        // clear pdc
         pdc.remove(patternDataKey);
         banner.setItemMeta(meta);
     }
 
-
+    /**
+     * Adds lore to the banner if there are more than 6 patterns.
+     * @param meta
+     */
     private void addLoreForExtraPatterns(BannerMeta meta) {
         List<Pattern> patterns = meta.getPatterns();
         if (patterns.size() > 6) {
-            // We have more than 6 patterns. Add a lore to show the other patterns.
             List<Component> lore = new ArrayList<>();
             for (int i = 6; i < patterns.size(); i++) {
                 Pattern p = patterns.get(i);
@@ -310,8 +235,8 @@ public class LoomListener implements Listener {
      * we have to encode the patterns somehow. a simple encoding:
      * [int length][for each pattern: byte color, short pattern type id]
      * <p>
-     * since we have limited datatype for persistentdata, we use a byte array.
-     * we'll store patterns as:
+     * since there is a limited datatype for persistentdata
+     * using a byte array stored patterns as:
      * - first 4 bytes: int count
      * - then for each pattern:
      *   1 byte: dye color ordinal
@@ -346,7 +271,11 @@ public class LoomListener implements Listener {
 
         return data;
     }
-
+    /**
+     * Decode the byte array back into a list of patterns.
+     * @param data
+     * @return
+     */
     private List<Pattern> decodePatterns(byte[] data) {
         if (data.length < 4) return new ArrayList<>();
         int count = ((data[0] & 0xFF) << 24) | ((data[1] & 0xFF) << 16) | ((data[2] & 0xFF) << 8) | (data[3] & 0xFF);
@@ -365,7 +294,11 @@ public class LoomListener implements Listener {
         return patterns;
     }
 
-
+    /**
+     * Format the pattern name to be more readable.
+     * @param string
+     * @return
+     */
     private String formatPatternName(String string) {
         String[] words = string.split("_");
         StringBuilder sb = new StringBuilder();
@@ -374,6 +307,11 @@ public class LoomListener implements Listener {
         }
         return sb.toString().trim();
     }
+    /**
+     * Get the real name of the pattern.
+     * @param type
+     * @return
+     */
     private String getPatternRealName(PatternType type) {
         if (type == null) {
             return "Unknown Contact Developer";
