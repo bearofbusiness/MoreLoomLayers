@@ -86,8 +86,6 @@ public class LoomListener implements Listener {
 
     @EventHandler
     public void onLoomClose(InventoryCloseEvent event) {
-        // If the loom is closed and player left the manipulated banner inside (which shouldn’t happen normally),
-        // we don’t need to do anything. The final taking of banner is what triggers restoration.
         if (!(event.getView().getTopInventory().getType() == InventoryType.LOOM)) {
             return; // Not a loom
         }
@@ -121,7 +119,6 @@ public class LoomListener implements Listener {
         BannerMeta meta = (BannerMeta) banner.getItemMeta();
         List<Pattern> patterns = new ArrayList<>(meta.getPatterns());
         if (patterns.size() > 5) {
-            // We only show up to 5 patterns, and store the rest secretly.
 
             // Store all patterns in PDC
             storePatternsInPDC(meta, patterns);
@@ -172,7 +169,10 @@ public class LoomListener implements Listener {
         banner.setItemMeta(meta);
     }
 
-
+    /**
+     * Adds lore to the banner if there are more than 6 patterns.
+     * @param meta
+     */
     private void addLoreForExtraPatterns(BannerMeta meta) {
         List<Pattern> patterns = meta.getPatterns();
         if (patterns.size() > 6) {
