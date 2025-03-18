@@ -10,3 +10,4 @@ This works by tricking the loom into thinking that there are only 5 patterns on 
  
 Adds Extra Lore to emulate the Text normal text.
 
+credit to https://www.planetminecraft.com/banner/minecraft-banner-454639/ for the banner
